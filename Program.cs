@@ -12,7 +12,7 @@ public class Program {
       Interval = TimeSpan.FromSeconds(5),
       Command = "ssid.sh",
       Icon = " ",
-      LengthLimit = 5
+      LengthLimit = 10
         });
 
     b.Add(new SeparatorBlock() {
