@@ -16,7 +16,7 @@ public class Program {
         });
 
     b.Add(new SeparatorBlock() {
-      SeparatorChar = "|",
+      SeparatorChar = "",
       LeftPadding = 1,
       RightPadding = 1
         });
@@ -28,7 +28,7 @@ public class Program {
         });
 
     b.Add(new SeparatorBlock() {
-      SeparatorChar = "|",
+      SeparatorChar = "",
       LeftPadding = 1,
       RightPadding = 1
         });
@@ -40,7 +40,7 @@ public class Program {
         });
 
     b.Add(new SeparatorBlock() {
-      SeparatorChar = "|",
+      SeparatorChar = "",
       LeftPadding = 1,
       RightPadding = 1
         });
