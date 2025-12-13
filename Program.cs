@@ -11,8 +11,9 @@ public class Program {
     b.Add(new CommandBlock() {
       Interval = TimeSpan.FromSeconds(5),
       Command = "ssid.sh",
+      EmptyResponse = "disconnected",
       Icon = " ",
-      LengthLimit = 10
+      LengthLimit = 12
         });
 
     b.Add(new SeparatorBlock() {

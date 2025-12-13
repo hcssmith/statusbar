@@ -3,6 +3,7 @@ namespace Blocks;
 public class Block
 {
   public TimeSpan Interval {init; get;}
+  public string EmptyResponse {init; get;}
   public int LengthLimit {init; get;}
   public string Icon {init; get;}
   public int Counter { get => _counter; }
@@ -84,6 +85,10 @@ public class Block
     if (LengthLimit > 0 && Result.Length > LengthLimit) {
       string r = Result.Substring(0, LengthLimit);
       results = $"{r}...";
+    }
+
+    if (results == "" && EmptyResponse != default(string)) {
+      results = EmptyResponse;
     }
 
     string final_result = results;
