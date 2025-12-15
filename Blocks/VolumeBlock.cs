@@ -2,11 +2,6 @@ namespace Blocks;
 
 using System.Diagnostics;
 
-public enum VolumeOutputType {
-  Speakers,
-  Headphones
-}
-
 public class VolumeBlock : Block {
   public string MuteIcon;
   public string SpeakerIcon;
