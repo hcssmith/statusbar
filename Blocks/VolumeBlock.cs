@@ -2,8 +2,42 @@ namespace Blocks;
 
 using System.Diagnostics;
 
+public enum VolumeOutputType {
+  Speakers,
+  Headphones
+}
+
 public class VolumeBlock : Block {
   public string MuteIcon;
+  public string SpeakerIcon;
+  public string HeadphonesIcon;
+
+  private string getOutputIcon() {
+    ProcessStartInfo pi = new ProcessStartInfo {
+      FileName = "pactl",
+      Arguments = "list sinks",
+      RedirectStandardOutput = true,
+      UseShellExecute = false,
+      CreateNoWindow = true
+    };
+
+    Process p = Process.Start(pi);
+
+    string output = p.StandardOutput.ReadToEnd();
+    p.WaitForExit();
+
+    int si = output.IndexOf("Active Port:", StringComparison.Ordinal);
+    int ei = output.IndexOf("\n", si, StringComparison.Ordinal);
+
+    int offset = 12;
+    string sink = output.Substring(si + offset, ei - si - offset).Trim();
+    
+    return sink switch {
+      "analog-output-headphones" => HeadphonesIcon,
+      "analog-output-speaker" => SpeakerIcon,
+      _ => Icon
+    };
+  }
 
   private bool isMute() {
     ProcessStartInfo pi = new ProcessStartInfo {
@@ -29,6 +63,8 @@ public class VolumeBlock : Block {
     };
 
   }
+
+  
 
   private int getVolume()
   {
@@ -57,7 +93,8 @@ public class VolumeBlock : Block {
   }
 
   public override void OnStart() {
-     Result = $"{getVolume()}";
+    Icon = getOutputIcon();
+    Result = $"{getVolume()}";
   }
 
   public override void OnEnd() {

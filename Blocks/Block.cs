@@ -5,7 +5,7 @@ public class Block
   public TimeSpan Interval {init; get;}
   public string EmptyResponse {init; get;}
   public int LengthLimit {init; get;}
-  public string Icon {init; get;}
+  public string Icon {set; get;}
   public int Counter { get => _counter; }
 
   public string Result;

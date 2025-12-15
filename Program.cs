@@ -25,6 +25,8 @@ public class Program {
     b.Add(new VolumeBlock() {
       Interval = TimeSpan.FromSeconds(1),
       Icon = " ",
+      SpeakerIcon = " ",
+      HeadphonesIcon = " ",
       MuteIcon = " "
         });
 
