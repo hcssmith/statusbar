@@ -84,7 +84,7 @@ public class Block
     string results = Result;
     if (LengthLimit > 0 && Result.Length > LengthLimit) {
       string r = Result.Substring(0, LengthLimit);
-      results = $"{r}...";
+      results = $"{r}…";
     }
 
     if (results == "" && EmptyResponse != default(string)) {
