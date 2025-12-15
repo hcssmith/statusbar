@@ -9,7 +9,7 @@ public class StatusBar
   private List<Block> blocks;
   private string cbar;
   XWindow root;
-  public string OuterPadding;
+  public string? OuterPadding;
 
   public StatusBar()
   {

@@ -3,11 +3,15 @@ namespace Blocks;
 using System.Diagnostics;
 
 public class VolumeBlock : Block {
-  public string MuteIcon;
-  public string SpeakerIcon;
-  public string HeadphonesIcon;
+  private string? _muteIcon;
+  private string? _speakerIcon;
+  private string? _headphonesIcon;
+  public string MuteIcon {get => _muteIcon ?? "?"; set => _muteIcon = value;}
+  public string SpeakerIcon {get => _speakerIcon ?? "?"; set => _speakerIcon = value;}
+  public string HeadphonesIcon {get => _headphonesIcon ?? "?"; set => _headphonesIcon = value;}
 
   private string getOutputIcon() {
+
     ProcessStartInfo pi = new ProcessStartInfo {
       FileName = "pactl",
       Arguments = "list sinks",
@@ -16,7 +20,11 @@ public class VolumeBlock : Block {
       CreateNoWindow = true
     };
 
-    Process p = Process.Start(pi);
+    Process? p = Process.Start(pi);
+    if (p is null)
+    {
+      return "?";
+    }
 
     string output = p.StandardOutput.ReadToEnd();
     p.WaitForExit();
@@ -42,7 +50,11 @@ public class VolumeBlock : Block {
       UseShellExecute = false,
       CreateNoWindow = true
     };
-    Process p = Process.Start(pi);
+    Process? p = Process.Start(pi);
+    if (p is null)
+    {
+      return false;
+    }
 
     string output = p.StandardOutput.ReadToEnd();
     p.WaitForExit();
@@ -70,7 +82,11 @@ public class VolumeBlock : Block {
       UseShellExecute = false,
       CreateNoWindow = true
     };
-    Process p = Process.Start(pi);
+    Process? p = Process.Start(pi);
+    if (p is null)
+    {
+      return 0;
+    }
 
     string output = p.StandardOutput.ReadToEnd();
     p.WaitForExit();

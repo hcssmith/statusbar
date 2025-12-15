@@ -3,8 +3,8 @@ namespace Blocks;
 public class BatteryBlock : Block {
   public required string BatteryLabel;
 
-  private string capacityPath;
-  private string statusPath;
+  private string? capacityPath;
+  private string? statusPath;
 
   public override void OnInit() {
     string batteryPath = $"/sys/class/power_supply/{BatteryLabel}";
@@ -15,6 +15,10 @@ public class BatteryBlock : Block {
   
 
   public override void OnStart() {
+    if (capacityPath is null || statusPath is null)
+    {
+      return;
+    }
     string capacityText = File.ReadAllText(capacityPath).Trim();
 
     int capacity = int.Parse(capacityText);

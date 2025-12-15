@@ -21,7 +21,11 @@ public class CommandBlock : Block {
       CreateNoWindow = true
     };
 
-    Process p = Process.Start(pi);
+    Process? p = Process.Start(pi);
+    if (p is null)
+    {
+      return;
+    }
     string output = p.StandardOutput.ReadToEnd().Trim();
     p.WaitForExit();
 

@@ -2,10 +2,14 @@ namespace Blocks;
 
 public class Block
 {
+
+  private string? _emptyResponse;
+  private string? _icon;
+
   public TimeSpan Interval {init; get;}
-  public string EmptyResponse {init; get;}
+  public string EmptyResponse {get => _emptyResponse ?? ""; set => _emptyResponse = value;}
   public int LengthLimit {init; get;}
-  public string Icon {set; get;}
+  public string Icon {get => _icon ?? ""; set => _icon = value;}
   public int Counter { get => _counter; }
 
   public string Result;
@@ -87,12 +91,12 @@ public class Block
       results = $"{r}…";
     }
 
-    if (results == "" && EmptyResponse != default(string)) {
+    if (results == "" && EmptyResponse != "") {
       results = EmptyResponse;
     }
 
     string final_result = results;
-    if (Icon != default(string))
+    if (Icon != "")
     {
       final_result = $"{Icon} {results}";
     }
