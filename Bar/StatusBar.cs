@@ -10,6 +10,7 @@ public class StatusBar
   private string cbar;
   XWindow root;
   public string? OuterPadding;
+  public int Heartbeat;
 
   public StatusBar()
   {
@@ -17,6 +18,7 @@ public class StatusBar
     cbar = "";
     root = new();
     root.ConnectRootWindow();
+    Heartbeat = 1000;
   }
 
   public void Add(Block b)
@@ -28,6 +30,7 @@ public class StatusBar
   {
     while (true)
     {
+      
       StringBuilder sb = new();
       if (OuterPadding != default(string))
       {
@@ -49,6 +52,7 @@ public class StatusBar
         cbar = nbar;
       }
       sb.Clear();
+      Thread.Sleep(Heartbeat);
     }
   }
 }

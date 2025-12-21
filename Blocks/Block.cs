@@ -75,7 +75,6 @@ public class Block
       cw+=wstep;
     }
     
-
     return sb.ToString();
   }
 
