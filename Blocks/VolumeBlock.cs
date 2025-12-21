@@ -3,10 +3,9 @@ namespace Blocks;
 using System.Diagnostics;
 
 public class VolumeBlock : Block {
-  private string? _muteIcon;
   private string? _speakerIcon;
   private string? _headphonesIcon;
-  public string MuteIcon {get => _muteIcon ?? "?"; set => _muteIcon = value;}
+  public string MuteIcon {get => EmptyResponse ?? "?"; set => EmptyResponse = value;}
   public string SpeakerIcon {get => _speakerIcon ?? "?"; set => _speakerIcon = value;}
   public string HeadphonesIcon {get => _headphonesIcon ?? "?"; set => _headphonesIcon = value;}
 
@@ -106,12 +105,10 @@ public class VolumeBlock : Block {
   public override void OnStart() {
     Icon = getOutputIcon();
     Result = $"{getVolume()}";
-  }
-
-  public override void OnEnd() {
     if (isMute())
     {
-      Result = MuteIcon;
+      Result = "";
     }
   }
+
 }

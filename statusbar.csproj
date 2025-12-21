@@ -6,15 +6,33 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <PublishConfiguration>Release</PublishConfiguration>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PublishDir>$(HOME)/.local/bin/</PublishDir>
+    <PublishTrimmed>true</PublishTrimmed>
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
-    <PublishTrimmed>true</PublishTrimmed>
     <SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="TerraFX.Interop.Xlib" Version="6.4.0.2" />
   </ItemGroup>
+
+  <Target Name="RestartStatusbar" AfterTargets="Publish">
+    <Exec Command="pkill -f $(AssemblyName) || true" />
+    <Exec Command="nohup &quot;$(PublishDir)$(AssemblyName)&quot; &gt; /dev/null 2&gt;&amp;1 &amp;" />
+  </Target>
+
+  <Target 
+          Name="StopStatusbarAfterBuild" 
+          AfterTargets="Build" 
+          BeforeTargets="Run" 
+          Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="pkill -f $(AssemblyName) || true" />
+  </Target>
 
 </Project>

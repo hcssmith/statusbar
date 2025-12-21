@@ -41,6 +41,7 @@ public class StatusBar
       if (OuterPadding != default(string))
       {
         sb.Append(OuterPadding);
+        sb.Append("");
       }
       string nbar = sb.ToString();
       if (nbar != cbar) {

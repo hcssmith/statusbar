@@ -2,6 +2,12 @@ namespace Blocks;
 
 public class BatteryBlock : Block {
   public required string BatteryLabel;
+  public required int HighLevel;
+  public required int LowLevel;
+  public required string HighColour;
+  public required string MediumColour;
+  public required string LowColour;
+
 
   private string? capacityPath;
   private string? statusPath;
@@ -27,6 +33,13 @@ public class BatteryBlock : Block {
       "Charging" => "+",
       _ => ""
     };
+    if (capacity >= HighLevel) {
+      Background = HighColour;
+    } else if (capacity <=LowLevel) {
+      Background = LowColour;
+    } else {
+      Background = MediumColour;
+    }
     Result = $"{status}{capacity}%";
   }
 }
