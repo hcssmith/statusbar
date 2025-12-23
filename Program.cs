@@ -10,6 +10,22 @@ public class Program {
 
     b.Add(new CommandBlock() {
       Interval = TimeSpan.FromSeconds(5),
+      Command = "ip.sh",
+      Background = "#5FAF8E",
+      Icon = "󰩟",
+        });
+    
+    b.Add(new CommandBlock() {
+      Interval = TimeSpan.FromSeconds(5),
+      Command = "vpnup.sh",
+      Background = "#4E9A7A",
+      Icon = "󰖂 ",
+      EmptyIcon = true,
+      EmptyColour = "#8A8F98",
+        });
+
+    b.Add(new CommandBlock() {
+      Interval = TimeSpan.FromSeconds(5),
       Command = "ssid.sh",
       EmptyResponse = "disconnected",
       EmptyColour = "#D90429",
