@@ -142,7 +142,11 @@ public class Block
 
     if (results == "") {
       if (EmptyIcon) {
-        o = $"{Icon} {EmptyResponse}";
+        if (EmptyResponse == "") {
+          o = $"{Icon}";
+        } else {
+          o = $"{Icon} {EmptyResponse}";
+        }
       } else {
         o = EmptyResponse;
       }
