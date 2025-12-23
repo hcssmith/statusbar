@@ -48,7 +48,9 @@ public class Program {
     b.Add(new BatteryBlock() {
       Interval = TimeSpan.FromSeconds(5),
       BatteryLabel = "BAT0",
-      Icon = "󰁹",
+      HighIcon = " ",
+      MediumIcon = " ",
+      LowIcon = "",
       LowLevel = 25,
       HighLevel = 70,
       HighColour = "#3AA655",

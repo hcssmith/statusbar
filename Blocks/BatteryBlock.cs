@@ -7,6 +7,9 @@ public class BatteryBlock : Block {
   public required string HighColour;
   public required string MediumColour;
   public required string LowColour;
+  public required string HighIcon;
+  public required string MediumIcon;
+  public required string LowIcon;
 
 
   private string? capacityPath;
@@ -35,10 +38,13 @@ public class BatteryBlock : Block {
     };
     if (capacity >= HighLevel) {
       Background = HighColour;
+      Icon = HighIcon;
     } else if (capacity <=LowLevel) {
       Background = LowColour;
+      Icon = LowIcon;
     } else {
       Background = MediumColour;
+      Icon = MediumIcon;
     }
     Result = $"{status}{capacity}%";
   }
