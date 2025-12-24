@@ -23,8 +23,7 @@
   </ItemGroup>
 
   <Target Name="RestartStatusbar" AfterTargets="Publish">
-    <Exec Command="pkill -f $(AssemblyName) || true" />
-    <Exec Command="nohup &quot;$(PublishDir)$(AssemblyName)&quot; &gt; /dev/null 2&gt;&amp;1 &amp;" />
+    <Exec Command="systemctl --user restart statusbar" />
   </Target>
 
   <Target 
@@ -32,7 +31,7 @@
           AfterTargets="Build" 
           BeforeTargets="Run" 
           Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="pkill -f $(AssemblyName) || true" />
+    <Exec Command="systemctl --user stop statusbar" />
   </Target>
 
 </Project>
