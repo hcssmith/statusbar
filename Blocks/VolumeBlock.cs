@@ -5,9 +5,12 @@ using System.Diagnostics;
 public class VolumeBlock : Block {
   private string? _speakerIcon;
   private string? _headphonesIcon;
+  private TimeSpan? _timeout;
   public string MuteIcon {get => EmptyResponse ?? "?"; set => EmptyResponse = value;}
   public string SpeakerIcon {get => _speakerIcon ?? "?"; set => _speakerIcon = value;}
   public string HeadphonesIcon {get => _headphonesIcon ?? "?"; set => _headphonesIcon = value;}
+
+  public TimeSpan Timeout {get => _timeout ?? TimeSpan.FromSeconds(2); set => _timeout = value;}
 
   private string getOutputIcon() {
 
@@ -26,7 +29,10 @@ public class VolumeBlock : Block {
     }
 
     string output = p.StandardOutput.ReadToEnd();
-    p.WaitForExit();
+    if (!p.WaitForExit(Timeout))
+    {
+      p.Kill();
+    }
 
     int si = output.IndexOf("Active Port:", StringComparison.Ordinal);
     int ei = output.IndexOf("\n", si, StringComparison.Ordinal);
@@ -56,7 +62,10 @@ public class VolumeBlock : Block {
     }
 
     string output = p.StandardOutput.ReadToEnd();
-    p.WaitForExit();
+    if (!p.WaitForExit(Timeout))
+    {
+      p.Kill();
+    }
 
     int ci = output.IndexOf(":", StringComparison.Ordinal) +1;
 
@@ -88,7 +97,10 @@ public class VolumeBlock : Block {
     }
 
     string output = p.StandardOutput.ReadToEnd();
-    p.WaitForExit();
+    if (!p.WaitForExit(Timeout))
+    {
+      p.Kill();
+    }
 
     int ci = output.IndexOf("%", StringComparison.Ordinal);
 

@@ -3,8 +3,11 @@ namespace Blocks;
 using System.Diagnostics;
 
 public class CommandBlock : Block {
+  private TimeSpan? _timeout;
+
   public required string Command;
   public List<string>? Arguments;
+  public TimeSpan Timeout {get => _timeout ?? TimeSpan.FromSeconds(2); set => _timeout = value;}
 
   public override void OnStart()
   {
@@ -27,7 +30,7 @@ public class CommandBlock : Block {
       return;
     }
     string output = p.StandardOutput.ReadToEnd().Trim();
-    p.WaitForExit();
+    p.WaitForExit(Timeout);
 
     Result = output;
   }
