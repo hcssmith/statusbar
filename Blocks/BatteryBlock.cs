@@ -7,9 +7,12 @@ public class BatteryBlock : Block {
   public required string HighColour;
   public required string MediumColour;
   public required string LowColour;
-  public required string HighIcon;
-  public required string MediumIcon;
-  public required string LowIcon;
+  public required string HighIconDischarging;
+  public required string MediumIconDischarging;
+  public required string LowIconDischarging;
+  public required string HighIconCharging;
+  public required string MediumIconCharging;
+  public required string LowIconCharging;
 
 
   private string? capacityPath;
@@ -31,21 +34,33 @@ public class BatteryBlock : Block {
     string capacityText = File.ReadAllText(capacityPath).Trim();
 
     int capacity = int.Parse(capacityText);
-    string status = File.ReadAllText(statusPath).Trim() switch {
-      "Discharging" => "-",
-      "Charging" => "+",
-      _ => ""
+    bool charging = File.ReadAllText(statusPath).Trim() switch {
+      "Discharging" => false,
+      "Charging" => true,
+      _ => false
     };
     if (capacity >= HighLevel) {
       Background = HighColour;
-      Icon = HighIcon;
+      if (charging) {
+        Icon = HighIconCharging;
+      } else {
+        Icon = HighIconDischarging;
+      }
     } else if (capacity <=LowLevel) {
       Background = LowColour;
-      Icon = LowIcon;
+      if (charging) {
+        Icon = LowIconCharging;
+      } else {
+        Icon = LowIconDischarging;
+      }
     } else {
       Background = MediumColour;
-      Icon = MediumIcon;
+      if (charging) {
+        Icon = MediumIconCharging;
+      } else {
+        Icon = MediumIconDischarging;
+      }
     }
-    Result = $"{status}{capacity}%";
+    Result = capacityText;
   }
 }
