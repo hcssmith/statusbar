@@ -36,5 +36,10 @@ public static class NativeXlib
 
     [DllImport(LibX11, CallingConvention = CallingConvention.Cdecl)]
     public static extern int XFlush(IntPtr display);
+
+    [DllImport(LibX11, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int XDeleteProperty(IntPtr display,
+        Window window,
+        Atom property);
 }
 

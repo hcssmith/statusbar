@@ -49,6 +49,8 @@ public class XRootWindow : IDisposable {
 
   public void Dispose() {
     if (_display != IntPtr.Zero) {
+      XDeleteProperty(_display, _rootWindow, GetAtom("WM_NAME"));
+      XDeleteProperty(_display, _rootWindow, GetAtom("_NET_WM_NAME"));
       XCloseDisplay(_display);
     }
   }

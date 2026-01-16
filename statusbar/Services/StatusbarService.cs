@@ -37,21 +37,20 @@ class StatusbarService : BackgroundService {
     where TBlock : BlockBase
     where TSettings : Settings, new()
   {
-    var block = _blocks.Where(b => b is TBlock).FirstOrDefault() as TBlock;
+    var settings = config.Get<TSettings>() ?? new TSettings () {};
+    var block = settings.Id != "" ?
+      _blocks.Where(b => b  is TBlock && b.Id == settings.Id).FirstOrDefault() as TBlock
+      :_blocks.Where(b => b is TBlock).FirstOrDefault() as TBlock;
     if (block is null) {
       _logger.LogInformation("Creating block {0}", typeof(TBlock) );
       block = ActivatorUtilities.CreateInstance<TBlock>(
           _serviceProvider,
-        config.Get<TSettings>() ?? new TSettings () {}
+        settings
           );
       _blocks.Add(block);
     } else {
       _logger.LogInformation("Setting new config");
-      var newConf = config.Get<TSettings>();
-      if (newConf is null) {
-        newConf = new TSettings () {};
-      }
-      ((TBlock)block).UpdateSettings(newConf);
+      ((TBlock)block).UpdateSettings(settings);
     }
   }
 
@@ -67,6 +66,9 @@ class StatusbarService : BackgroundService {
           break;
         case "VolumeBlock":
           CreateOrUpdate<VolumeBlock, VolumeSettings>(block);
+          break;
+        case "CommandBlock":
+          CreateOrUpdate<CommandBlock, CommandSettings>(block);
           break;
         default: 
           _logger.LogError("Unknown type");
@@ -91,6 +93,9 @@ class StatusbarService : BackgroundService {
           break;
         case "VolumeBlock":
           CreateOrUpdate<VolumeBlock, VolumeSettings>(block);
+          break;
+        case "CommandBlock":
+          CreateOrUpdate<CommandBlock, CommandSettings>(block);
           break;
         default:
           _logger.LogError("Unknown block type detected.");

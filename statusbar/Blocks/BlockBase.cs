@@ -5,6 +5,7 @@ namespace Blocks;
 
 public class Settings {
   public int Delay {get; set;} = 1000;
+  public string Id {get; set;} = "";
   public string Type {get; set;} = "";
   public int Order {get; set;} = 100;
   public string Icon {get; set;} = "";
@@ -24,6 +25,7 @@ abstract public class BlockBase : BackgroundService {
   internal virtual string Background => _settings.Background;
   internal virtual string Foreground => _settings.Foreground;
   internal virtual string Icon => _settings.Icon;
+  internal virtual string Id => _settings.Id;
 
   public abstract void UpdateSettings<T>(T s) where T:Settings;
 
