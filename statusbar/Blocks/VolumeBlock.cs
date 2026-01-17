@@ -8,6 +8,7 @@ public class VolumeSettings : Settings {
   public string SpeakerIcon {get; set;} = "S";
   public string HeadphonesIcon {get; set; } = "H";
   public string MuteColour {get; set;} = "#FFFFFF";
+  public int Timeout {get;set;} = 1000;
 }
 
 public class VolumeBlock : BlockBase {
@@ -48,13 +49,13 @@ public class VolumeBlock : BlockBase {
     var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
     var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
     var exitTask = process.WaitForExitAsync(cancellationToken);
-    var timeoutTask = Task.Delay(_settings.Delay);
+    var timeoutTask = Task.Delay(_settings.Timeout, cancellationToken);
     
     var completedTask = await Task.WhenAny(exitTask, timeoutTask);
 
     if (completedTask == timeoutTask && !process.HasExited) {
       process.Kill(entireProcessTree: true);
-      _logger.LogError("pactl {arguments} timed out after {Timeout}", arguments, _settings.Delay);
+      _logger.LogError("pactl {arguments} timed out after {Timeout}", arguments, _settings.Timeout);
       return "ERR";
     }
 

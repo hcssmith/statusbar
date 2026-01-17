@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace Blocks;
 
 public class Settings {
-  public int Delay {get; set;} = 1000;
+  public int Interval {get; set;} = 1000;
   public string Id {get; set;} = "";
   public string Type {get; set;} = "";
   public int Order {get; set;} = 100;
@@ -41,7 +41,7 @@ abstract public class BlockBase : BackgroundService {
     while (!ct.IsCancellationRequested) {
       string _content = await UpdateContent(ct);
       Content = $"^c{Background}^^t0,0,20,40,4^^f20^^c{Foreground}^^b{Background}^ {Icon}{_content} ^c{Background}^^t0,0,20,40,5^";
-      await Task.Delay(_settings.Delay, ct);
+      await Task.Delay(_settings.Interval, ct);
     }
   }
 } 
