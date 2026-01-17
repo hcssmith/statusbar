@@ -18,7 +18,7 @@ class StatusbarService : BackgroundService {
   private ILogger<StatusbarService> _logger;
   private IServiceProvider _serviceProvider;
   private IOptionsMonitor<StatusbarSettings> _settings;
-  private StatusbarSettings _oldSettings;
+  private string _lastSettingsSnapshot;
   private List<BlockBase> _blocks;
 
 
@@ -28,7 +28,7 @@ class StatusbarService : BackgroundService {
     _logger = logger;
     _serviceProvider = sp;
     _settings = settings;
-    _oldSettings = settings.CurrentValue;
+    _lastSettingsSnapshot = CreateSettingsSnapshot(settings.CurrentValue);
     _blocks = new();
     _settings.OnChange(OnSettingsChanged);
   }
@@ -49,12 +49,20 @@ class StatusbarService : BackgroundService {
           );
       _blocks.Add(block);
     } else {
-      _logger.LogInformation("Setting new config");
+      _logger.LogInformation("Setting new config for block {0}", block.Id != "" ? block.Id : typeof(TBlock));
       ((TBlock)block).UpdateSettings(settings);
     }
   }
 
   private void OnSettingsChanged(StatusbarSettings newSettings) {
+    var newSnapshot = CreateSettingsSnapshot(newSettings);
+    if (AreSettingsEqual(_lastSettingsSnapshot, newSnapshot)) {
+      _logger.LogDebug("Settings unchanged, skipping update");
+      return;
+    }
+
+    _lastSettingsSnapshot = newSnapshot;
+
     foreach (var block in newSettings.Blocks) {
       string type = block["Type"] ?? "";
       switch (type) {
@@ -76,6 +84,31 @@ class StatusbarService : BackgroundService {
       }
     }
   }
+
+  private bool AreSettingsEqual(string a, string b) {
+    if (a == b) return true;
+    if (a == null || b == null) return false;
+    var equal = a == b;
+    _logger.LogDebug("Settings equal: {0}", equal);
+    return equal;
+  }
+
+  private string CreateSettingsSnapshot(StatusbarSettings settings) {
+    var blocks = settings.Blocks ?? Enumerable.Empty<IConfigurationSection>();
+    var blockStrings = blocks.Select(BlockToString).OrderBy(x => x).ToArray();
+    return $"{settings.PollInterval}|{string.Join(";", blockStrings)}";
+  }
+
+  private string BlockToString(IConfigurationSection section) {
+    if (section == null) return "";
+
+    var pairs = section.AsEnumerable()
+      .Where(pair => pair.Value != null)
+      .Select(pair => $"{pair.Key}={pair.Value}")
+      .OrderBy(x => x);
+
+    return string.Join(",", pairs);
+  }
   
 
   protected override async Task ExecuteAsync(CancellationToken ct) {
@@ -83,7 +116,6 @@ class StatusbarService : BackgroundService {
 
     foreach (var block in _settings.CurrentValue.Blocks) {
       string type = block["Type"] ?? "";
-      _logger.LogInformation("Creating block: {0}", type);
       switch (type) {
         case "TimeBlock":
           CreateOrUpdate<TimeBlock, TimeSettings>(block);
@@ -125,7 +157,7 @@ class StatusbarService : BackgroundService {
             })
           .Select(b => b.Content));
       if (new_bar != bar) {
-        _logger.LogInformation(new_bar);
+        _logger.LogDebug(new_bar);
         root.SetWindowName(new_bar);
         bar = new_bar;
       }
