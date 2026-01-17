@@ -22,6 +22,7 @@ A modular, configurable Linux statusbar built with .NET 10 that displays system 
 - **Linux x64**
 - **X11** (sets root window name)
 - **PulseAudio** (for volume block)
+- **DWM - My branch** (has status2d patch with the ablility to draw triangles as well)
 - **Optional**: `/sys/class/power_supply/` (for battery block)
 
 ## Installation
