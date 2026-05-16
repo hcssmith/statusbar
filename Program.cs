@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Services;
-using System.IO;
 
 class Program {
   static async Task Main(string[] args) => await Host.CreateDefaultBuilder(args)
