@@ -113,9 +113,24 @@ public class VolumeBlock : BlockBase {
       _logger.LogWarning("No sinks found");
       return "ERR";
     }
-    string ap = "Active Port:";
 
-    int si = sinks.IndexOf(ap, StringComparison.Ordinal);
+    // Find the default sink's section before looking for Active Port,
+    // otherwise we always pick up the first sink which may not be active.
+    var defaultSink = await PactlCommand("get-default-sink", cancellationToken);
+    int searchFrom = 0;
+
+    if (!string.IsNullOrEmpty(defaultSink) && defaultSink != "ERR") {
+      string nameMarker = $"Name: {defaultSink}";
+      int nameIndex = sinks.IndexOf(nameMarker, StringComparison.Ordinal);
+      if (nameIndex != -1) {
+        searchFrom = nameIndex;
+      } else {
+        _logger.LogWarning("Default sink '{DefaultSink}' not found in sinks list, falling back to first sink", defaultSink);
+      }
+    }
+
+    string ap = "Active Port:";
+    int si = sinks.IndexOf(ap, searchFrom, StringComparison.Ordinal);
     int ei = sinks.IndexOf("\n", si, StringComparison.Ordinal);
 
     int offset = ap.Length;
