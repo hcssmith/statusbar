@@ -39,8 +39,12 @@ abstract public class BlockBase : BackgroundService {
 
   protected override async Task ExecuteAsync(CancellationToken ct) {
     while (!ct.IsCancellationRequested) {
-      string _content = await UpdateContent(ct);
-      Content = $"^c{Background}^^t0,0,20,40,4^^f20^^c{Foreground}^^b{Background}^ {Icon}{_content} ^c{Background}^^t0,0,20,40,5^";
+      try {
+        string _content = await UpdateContent(ct);
+        Content = $"^c{Background}^^t0,0,20,40,4^^f20^^c{Foreground}^^b{Background}^ {Icon}{_content} ^c{Background}^^t0,0,20,40,5^";
+      } catch (Exception ex) when (ex is not OperationCanceledException) {
+        _logger.LogError(ex, "Error updating block");
+      }
       await Task.Delay(_settings.Interval, ct);
     }
   }

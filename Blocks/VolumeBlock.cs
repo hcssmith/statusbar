@@ -83,7 +83,7 @@ public class VolumeBlock : BlockBase {
   private async Task<bool> IsMute(CancellationToken ct) {
     var mute_state = await PactlCommand("get-sink-mute @DEFAULT_SINK@", ct);
 
-    if (mute_state is null) {
+    if (mute_state is null or "ERR") {
       _logger.LogWarning("Could not get mute state");
       return false;
     }
@@ -109,9 +109,9 @@ public class VolumeBlock : BlockBase {
   private async Task<string> GetOutputIcon(CancellationToken cancellationToken) {
     var sinks = await PactlCommand("list sinks", cancellationToken);
 
-    if (sinks is null) {
+    if (sinks is null or "ERR") {
       _logger.LogWarning("No sinks found");
-      return "ERR";
+      return _settings.SpeakerIcon;
     }
 
     // Find the default sink's section before looking for Active Port,
@@ -131,7 +131,7 @@ public class VolumeBlock : BlockBase {
 
     string ap = "Active Port:";
     int si = sinks.IndexOf(ap, searchFrom, StringComparison.Ordinal);
-    int ei = sinks.IndexOf("\n", si, StringComparison.Ordinal);
+    int ei = si != -1 ? sinks.IndexOf("\n", si, StringComparison.Ordinal) : -1;
 
     int offset = ap.Length;
 
@@ -150,9 +150,9 @@ public class VolumeBlock : BlockBase {
   }
   
   private async Task<int> GetVolume(CancellationToken cancellationToken) {
-    var volume_state =await PactlCommand("get-sink-volume @DEFAULT_SINK@", cancellationToken);
+    var volume_state = await PactlCommand("get-sink-volume @DEFAULT_SINK@", cancellationToken);
 
-    if (volume_state is null) {
+    if (volume_state is null or "ERR") {
       _logger.LogWarning("Could not get volume state");
       return 0;
     }
